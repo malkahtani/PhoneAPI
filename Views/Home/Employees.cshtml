@@ -1,0 +1,225 @@
+﻿@model PhoneAPI.Models.Emp
+
+@{
+    ViewBag.Title = "Employee";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-3.1.0.js")"></script>
+    <script type="text/javascript">
+      var ViewModel = function () {
+          var self = this;
+          self.error = ko.observable();
+          self.emps = ko.observableArray();
+          self.deps = ko.observableArray();
+          self.ranks = ko.observableArray();
+          
+
+          self.newEmp = {
+              dep_Id: ko.observable(),
+              rank_Id: ko.observable(),
+              emp_name: ko.observable(),
+              phone: ko.observable(),
+              mobile: ko.observable()
+
+          }
+          self.status = ko.observable();
+         
+          var baseUri = '@ViewBag.ApiUrl';
+          var depUri = '@ViewBag.depUrl';
+          var rankUri = '@ViewBag.rankUrl';
+
+          function ajaxHelper(uri, method, data) {
+              self.error(''); 
+              return $.ajax({
+                  type: method,
+                  url: uri,
+                  dataType: 'json',
+                  contentType: 'application/json',
+                  data: data ? JSON.stringify(data) : null
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                  self.error(errorThrown);
+              });
+          }
+
+          self.create = function (formElement) {
+              
+              var emp = {
+                  emp_name: self.newEmp.emp_name(),
+                  phone: self.newEmp.phone(),
+                  mobile: self.newEmp.mobile(),
+                  dep_Id: self.newEmp.dep_Id().dep_Id,
+                  rank_Id: self.newEmp.rank_Id().rank_Id
+                  
+                  
+                  
+              };
+
+              
+              $.ajax({
+                  url: baseUri ,
+                  cache: false,
+                  type: 'POST',
+                  contentType: 'application/json; charset=utf-8',
+                  data: JSON.stringify(emp),
+                  success: getAllEmps
+              }).done(function (item) {
+                  self.emps.push(item);
+              });
+           
+          }
+
+          self.update = function (emp) {
+
+              $.ajax({
+                  url: baseUri + '/' + emp.emp_Id,
+                  cache: false,
+                  type: 'PUT',
+                  contentType: 'application/json; charset=utf-8',
+                  data: JSON.stringify(emp),
+                  success: getAllEmps
+              })
+               .fail(
+               function (xhr, textStatus, err) {
+                   self.status(err);
+
+               });
+
+          }
+
+          self.remove = function (emp) {
+                $.ajax({ type: "DELETE", url: baseUri + '/' + emp.emp_Id })
+                  .done(function () { self.emps.remove(emp); });
+          }
+
+          function getAllEmps() {
+              ajaxHelper(baseUri, 'GET').done(function (data) {
+                  self.emps(data);
+              });
+          }
+          
+         
+
+          function getDeps() {
+              ajaxHelper(depUri, 'GET').done(function (data1) {
+                  self.deps(data1);
+              });
+          }
+          
+          function getRanks() {
+              ajaxHelper(rankUri, 'GET').done(function (data2) {
+                  self.ranks(data2);
+              });
+          }
+          getDeps();
+          getRanks();
+          getAllEmps();
+          
+          
+      }
+        
+
+      $(document).ready(function () {
+
+          ko.applyBindings(new ViewModel());
+         
+      })
+    </script>
+}
+
+<div class="content">
+    <div class="float-left">
+        <ul id="update-emps" data-bind="foreach: emps">
+            <li>
+                <div>
+                    <div class="item">Employee ID :  <span data-bind="text: $data.emp_Id"></span></div>
+
+                </div>
+                <div>
+                    <div class="item">Employee Name</div>
+                    <input type="text" data-bind="value: $data.emp_name" />
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Phone</div>
+                    <input type="text" data-bind="value: $data.phone" />
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Mobile</div>
+                    <input type="text" data-bind="value: $data.mobile" />
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Department</div>
+                    <select data-bind="options:$root.deps, optionsText: 'dep_name',  optionsValue: 'dep_Id', value: $data.dep_Id"></select>
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Rank</div>
+                    <select data-bind="options:$root.ranks, optionsText: 'rank_name',  optionsValue: 'rank_Id', value: $data.rank_Id"></select>
+
+
+                </div>
+
+                <div>
+                    <input type="button" value="Update" data-bind="click: $root.update" />
+                    <input type="button" value="Delete Item" data-bind="click: $root.remove" />
+                </div>
+            </li>
+        </ul>
+    </div>
+   
+    <div class="float-right">
+        <h2>Add New Employee</h2>
+        <form class="form-horizontal" data-bind="submit: create">
+
+           
+            
+            
+            <div class="form-group" data-bind="with: newEmp">
+                <label for="inputTitle" class="col-sm-2 control-label">Employee Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputemp_name" data-bind="value: emp_name" />
+
+                </div>
+
+                <label for="inputTitle" class="col-sm-2 control-label">Employee Phone</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputphone" data-bind="value: phone" />
+
+                </div>
+
+
+                <label for="inputTitle" class="col-sm-2 control-label">Employee Mobile</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputmobile" data-bind="value: mobile" />
+
+                </div>
+
+
+
+
+            </div>
+            <div class="form-group">
+                <label for="inputAuthor" class="col-sm-2 control-label">Employee Rank</label>
+                <div class="col-sm-10">
+                    <select data-bind="options:ranks, optionsText: 'rank_name', value: newEmp.rank_Id"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAuthor" class="col-sm-2 control-label">Employee Department</label>
+                <div class="col-sm-10">
+                    <select data-bind="options:deps, optionsText: 'dep_name', value: newEmp.dep_Id"></select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+
+        </form>
+    </div>
+</div>

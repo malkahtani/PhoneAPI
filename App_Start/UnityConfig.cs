@@ -1,0 +1,24 @@
+using Microsoft.Practices.Unity;
+using System.Web.Http;
+using Unity.WebApi;
+using PhoneAPI.Models;
+
+namespace PhoneAPI
+{
+    public static class UnityConfig
+    {
+        public static void RegisterComponents()
+        {
+			var container = new UnityContainer();
+            
+            // register all your components with the container here
+            // it is NOT necessary to register your controllers
+            container.RegisterType<IDepRepository, DepRepository>();
+            container.RegisterType<IEmpRepository, EmpRepository>();
+            container.RegisterType<IRankRepository, RankRepository>(); 
+            // e.g. container.RegisterType<ITestService, TestService>();
+            
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+        }
+    }
+}

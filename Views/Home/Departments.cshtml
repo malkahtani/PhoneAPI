@@ -1,0 +1,136 @@
+﻿@model PhoneAPI.Models.Dep
+
+@{
+    ViewBag.Title = "Departments";
+}
+
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-3.1.0.js")"></script> 
+  <script type="text/javascript">
+      var ViewModel = function () {
+          var self = this;
+          self.error = ko.observable();
+          self.deps = ko.observableArray();
+          self.newDep = {
+              dep_Id: ko.observable(),
+              dep_name: ko.observable()
+             
+          }
+          self.status = ko.observable();
+
+          var baseUri = '@ViewBag.ApiUrl';
+
+          function ajaxHelper(uri, method, data) {
+              self.error(''); 
+              return $.ajax({
+                  type: method,
+                  url: uri,
+                  dataType: 'json',
+                  contentType: 'application/json',
+                  data: data ? JSON.stringify(data) : null
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                  self.error(errorThrown);
+              });
+          }
+
+          self.create = function (formElement) {
+             
+              var dep = {
+                  dep_Id: self.newDep.dep_Id(),
+                  dep_name: self.newDep.dep_name()
+              };
+              $.ajax({
+                  url: baseUri ,
+                  cache: false,
+                  type: 'POST',
+                  contentType: 'application/json; charset=utf-8',
+                  data: JSON.stringify(dep),
+                  success: getAllDeps
+              }).done(function (item) {
+                  self.deps.push(item);
+              });
+            
+          }
+
+          self.update = function (dep) {
+                                    
+              $.ajax({
+                  url: baseUri + '/' + dep.dep_Id,
+                  cache: false, 
+                  type: 'PUT', 
+                  contentType: 'application/json; charset=utf-8', 
+                  data: JSON.stringify(dep), 
+                  success: getAllDeps
+              }) 
+               .fail( 
+               function (xhr, textStatus, err) { 
+                   self.status(err);
+                  
+               }); 
+          
+          }
+
+          self.remove = function (dep) {
+              
+              $.ajax({ type: "DELETE", url: baseUri + '/' + dep.dep_Id })
+                  .done(function () { self.deps.remove(dep); });
+          }
+          
+          function getAllDeps() {
+              ajaxHelper(baseUri, 'GET').done(function (data) {
+                  self.deps(data);
+              });
+          }
+
+          getAllDeps();
+      }
+
+      $(document).ready(function () {
+          ko.applyBindings(new ViewModel());
+      })
+  </script>
+}
+
+<div class="content">
+    <div class="float-left">
+    <ul id="update-deps" data-bind="foreach: deps">
+        <li>
+            <div>
+                <div class="item">Department ID : <span data-bind="text: $data.dep_Id"></span> </div>
+                
+            </div>
+            <div>
+                <div class="item">Department Name</div> 
+                <input type="text" data-bind="value: $data.dep_name"/>
+
+                
+            </div> 
+            
+            <div>
+                <input type="button" value="Update" data-bind="click: $root.update"/>
+                <input type="button" value="Delete Item" data-bind="click: $root.remove"/>
+            </div>
+        </li>
+    </ul>
+    </div>
+    
+    <div class="float-right">
+    <h2>Add New Department</h2>
+     <form class="form-horizontal" data-bind="submit: create">
+      
+
+      <div class="form-group" data-bind="with: newDep">
+        <label for="inputTitle" class="col-sm-2 control-label">Department Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputdep_name" data-bind="value:dep_name"/>
+           
+        </div>
+
+        
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+            
+    </form>
+    </div>
+</div>
