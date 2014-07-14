@@ -6,7 +6,7 @@
     <WebStackScaffolding_IsPartialViewSelected>False</WebStackScaffolding_IsPartialViewSelected>
     <WebStackScaffolding_IsReferencingScriptLibrariesSelected>True</WebStackScaffolding_IsReferencingScriptLibrariesSelected>
     <WebStackScaffolding_DbContextTypeFullName>PhoneAPI.Models.PhoneContext</WebStackScaffolding_DbContextTypeFullName>
-    <NameOfLastUsedPublishProfile>phoneapiservices - Web Deploy</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>phoneapiservices - Web Deploy %282%29</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

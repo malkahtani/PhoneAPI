@@ -1,0 +1,135 @@
+﻿@model PhoneAPI.Models.Rank
+
+@{
+    ViewBag.Title = "Ranks";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-3.1.0.js")"></script>
+    <script type="text/javascript">
+      var ViewModel = function () {
+          var self = this;
+          self.error = ko.observable();
+          self.ranks = ko.observableArray();
+          self.newRank = {
+              rank_Id: ko.observable(),
+              rank_name: ko.observable()
+
+          }
+          self.status = ko.observable();
+
+          var baseUri = '@ViewBag.ApiUrl';
+
+          function ajaxHelper(uri, method, data) {
+              self.error(''); 
+              return $.ajax({
+                  type: method,
+                  url: uri,
+                  dataType: 'json',
+                  contentType: 'application/json',
+                  data: data ? JSON.stringify(data) : null
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                  self.error(errorThrown);
+              });
+          }
+          self.create = function (formElement) {
+             
+              var rank = {
+                  rank_Id: self.newRank.rank_Id(),
+                  rank_name: self.newRank.rank_name()
+              };
+              $.ajax({
+                  url: baseUri ,
+                  cache: false,
+                  type: 'POST',
+                  contentType: 'application/json; charset=utf-8',
+                  data: JSON.stringify(rank),
+                  success: getAllRanks
+              }).done(function (item) {
+                  self.ranks.push(item);
+              });
+           
+          }
+
+          self.update = function (rank) {
+
+              $.ajax({
+                  url: baseUri + '/' + rank.rank_Id,
+                  cache: false,
+                  type: 'PUT',
+                  contentType: 'application/json; charset=utf-8',
+                  data: JSON.stringify(rank),
+                  success: getAllRanks
+              })
+               .fail(
+               function (xhr, textStatus, err) {
+                   self.status(err);
+
+               });
+
+          }
+
+          self.remove = function (rank) {
+                $.ajax({ type: "DELETE", url: baseUri + '/' + rank.rank_Id })
+                  .done(function () { self.ranks.remove(rank); });
+          }
+
+          function getAllRanks() {
+              ajaxHelper(baseUri, 'GET').done(function (data) {
+                  self.ranks(data);
+              });
+          }
+
+          getAllRanks();
+      }
+
+      $(document).ready(function () {
+          ko.applyBindings(new ViewModel());
+      })
+    </script>
+}
+
+
+<div class="content">
+    <div class="float-left">
+        <ul id="update-ranks" data-bind="foreach: ranks">
+            <li>
+                <div>
+                    <div class="item">Rank ID: <span data-bind="text: $data.rank_Id"></span></div>
+
+                </div>
+                <div>
+                    <div class="item">Rank Name</div>
+                    <input type="text" data-bind="value: $data.rank_name" />
+
+
+                </div>
+
+                <div>
+                    <input type="button" value="Update" data-bind="click: $root.update" />
+                    <input type="button" value="Delete Item" data-bind="click: $root.remove" />
+                </div>
+            </li>
+        </ul>
+    </div>
+   
+    <div class="float-right">
+        <h2>Add New Rank</h2>
+        <form class="form-horizontal" data-bind="submit: create">
+
+
+            <div class="form-group" data-bind="with: newRank">
+                <label for="inputTitle" class="col-sm-2 control-label">Rank Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputrank_name" data-bind="value:rank_name" />
+
+                </div>
+
+
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+
+        </form>
+    </div>
+</div>

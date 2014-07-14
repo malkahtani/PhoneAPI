@@ -18,13 +18,7 @@ namespace PhoneAPI
                         "~/Scripts/jquery.unobtrusive*",
                         "~/Scripts/jquery.validate*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/paging").Include(
-                        "~/Scripts/knockout-{version}.js",
-
-                        "~/Scripts/paging.js"));
-            bundles.Add(new ScriptBundle("~/bundles/Ranks").Include(
-                       "~/Scripts/knockout-{version}.js",
-                       "~/Scripts/Ranks.js"));          
+            
             
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

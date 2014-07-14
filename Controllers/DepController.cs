@@ -18,12 +18,16 @@ namespace PhoneAPI.Controllers.api
             : base(repo)
         {
         }
+        // GET: api/Dep
+        // Return all departments as json i.e. [{"$id": "1" , "dep_Id" : 1 , "dep_name": "HR"},{"$id":"2", "dep_Id": 5, "dep_name": "IT"}]
         public IEnumerable<Dep> Get()
         {
             return TheDepRepository.GetAll();
         }
-          
-    public HttpResponseMessage GetDep(int id)
+       
+        // GET: api/Dep/3
+        // Return one department according to the id as json i.e. [{"dep_Id" : 3 , "dep_name": "HR"}]
+        public HttpResponseMessage GetDep(int id)
         {
             try
             {
@@ -43,6 +47,9 @@ namespace PhoneAPI.Controllers.api
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
+
+        //POST: api/Dep
+        // Insert new department to the repository
     [HttpPost]
     [CheckModelForNull]
     [ValidateModelState]
@@ -53,7 +60,7 @@ namespace PhoneAPI.Controllers.api
 
             var entity = TheDepModelFactory.Parse(depModel);
 
-            if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read subject/tutor from body");
+            if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read department from body");
 
             TheDepRepository.Post(entity);
             
@@ -67,6 +74,8 @@ namespace PhoneAPI.Controllers.api
         }
     }
 
+    // PUT: api/Dep/5
+    // Update the department in the repository
          [HttpPatch]
         [HttpPut]
          [CheckModelForNull]
@@ -78,13 +87,13 @@ namespace PhoneAPI.Controllers.api
 
                 var updatedDep = TheDepModelFactory.Parse(depModel);
 
-                if (updatedDep == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read subject/tutor from body");
+                if (updatedDep == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read department from body");
                 
                 var originalDep = TheDepRepository.Get(id);
 
                 if (originalDep == null || originalDep.dep_Id != id)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotModified, "Course is not found");
+                    return Request.CreateResponse(HttpStatusCode.NotModified, "Department is not found");
                 }
                 else
                 {
@@ -104,13 +113,15 @@ namespace PhoneAPI.Controllers.api
             }
         }
 
+         // DELETE: api/Dep/5
+         // Delete department from the repository
         public HttpResponseMessage Delete(int id)
         {
             try
             {
-                var course = TheDepRepository.Get(id);
+                var dep = TheDepRepository.Get(id);
                 
-                if (course == null)
+                if (dep == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }

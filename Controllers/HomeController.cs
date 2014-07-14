@@ -8,6 +8,7 @@ namespace PhoneAPI.Controllers
 {
     public class HomeController : Controller
     {
+        // Return the index page with the URI of the APIs
         public ActionResult Index()
         {
             string apiUri = Url.HttpRouteUrl("DefaultApi", new { controller = "Emp", });
@@ -21,6 +22,7 @@ namespace PhoneAPI.Controllers
 
             return View();
         }
+        // Return the departments page with the URI of the Department API
         public ActionResult Departments()
         {
             string apiUri = Url.HttpRouteUrl("DefaultApi", new { controller = "Dep", });
@@ -28,6 +30,7 @@ namespace PhoneAPI.Controllers
 
             return View();
         }
+        // Return the employees page with the URI of the APIs
         public ActionResult Employees()
         {
             string apiUri = Url.HttpRouteUrl("DefaultApi", new { controller = "Emp", });
@@ -41,6 +44,7 @@ namespace PhoneAPI.Controllers
 
             return View();
         }
+        // Return the ranks page with the URI of the rank API
         public ActionResult Ranks()
         {
             string apiUri = Url.HttpRouteUrl("DefaultApi", new { controller = "Rank", });

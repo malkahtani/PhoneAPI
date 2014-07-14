@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Departments</title>
+    <meta charset="utf-8" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/modernizr-2.7.2.js")" type="text/javascript"></script>
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body>
+    <header>
+        <li>@Html.ActionLink("Departments", "Departments", "Home")</li>
+        <li>@Html.ActionLink("Ranks", "Ranks", "Home")</li>
+        <li>@Html.ActionLink("Employees", "Employees", "Home")</li>
+        <div class="content-wrapper">       
+            <div class="float-left">
+                <p class="site-title"><a href="/">ASP.NET Phone API</a></p>
+            </div>
+        </div>
+    </header>
+    <div id="body">
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+            <script type="text/javascript" src="@Url.Content("~/Scripts/knockout-3.1.0.js")"></script>
+            <script type="text/javascript">
+                var ViewModel = function () {
+                    var self = this;
+                    self.error = ko.observable();
+                    self.emps = ko.observableArray();
+                    self.deps = ko.observableArray();
+                    self.ranks = ko.observableArray();
+
+
+                    var baseUri = '@ViewBag.ApiUrl';
+                    var depUri = '@ViewBag.depUrl';
+                    var rankUri = '@ViewBag.rankUrl';
+
+                    function ajaxHelper(uri, method, data) {
+                        self.error(''); 
+                        return $.ajax({
+                            type: method,
+                            url: uri,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            data: data ? JSON.stringify(data) : null
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            self.error(errorThrown);
+                        });
+                    }
+                    self.update = function (emp) {
+
+                        $.ajax({
+                            url: baseUri + '/' + emp.emp_Id,
+                            cache: false,
+                            type: 'PUT',
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(emp),
+                            success: function () {
+                                window.location.reload(true);
+                            }
+                        })
+                         .fail(
+                         function (xhr, textStatus, err) {
+                             self.status(err);
+
+                         });
+
+                    }
+
+                    self.remove = function (emp) {
+                             $.ajax({ type: "DELETE", url: baseUri + '/' + emp.emp_Id })
+                            .done(function () { self.emps.remove(emp); });
+                    }
+                    self.findname = function () {
+                        var id = $('#name').val();
+                        self.emps.removeAll();
+                        ajaxHelper(baseUri + '?' + 'name=' + id, 'GET').done(function (data) {
+                            self.emps(data);
+                        });
+
+                    }
+                    self.findphone = function () {
+                        var id = $('#phone').val();
+                        self.emps.removeAll();
+                        ajaxHelper(baseUri + '?' + 'phone=' + id, 'GET').done(function (data) {
+                            self.emps(data);
+                        });
+
+                    }
+                    self.findmobile = function () {
+                        var id = $('#mobile').val();
+                        self.emps.removeAll();
+                        ajaxHelper(baseUri + '?' + 'mobile=' + id, 'GET').done(function (data) {
+                            self.emps(data);
+                        });
+
+                    }
+                    function getRanks() {
+                        ajaxHelper(rankUri, 'GET').done(function (data2) {
+                            self.ranks(data2);
+                        });
+                    }
+                    function getDeps() {
+                        ajaxHelper(depUri, 'GET').done(function (data1) {
+                            self.deps(data1);
+                        });
+                    }
+
+
+                    getDeps();
+                    getRanks();
+
+
+
+                }
+
+
+                $(document).ready(function () {
+
+                    ko.applyBindings(new ViewModel());
+
+                })
+
+            </script>
+        }
+        <section class="featured"><div id="searchbyname">
+    <div>
+        <h4>Search by Name</h4>
+        <input type="text" id="name" size="15" />
+        <input type="button" value="Search" data-bind="click: $root.findname" />
+       
+    </div>
+</div>
+<div id="searchbyphone">
+    <div>
+        <h4>Search by Phone</h4>
+        <input type="text" id="phone" size="15" />
+        <input type="button" value="Search" data-bind="click: $root.findphone" />
+        
+    </div>
+</div>
+<div id="searchbymobile">
+    <div>
+        <h4>Search by Mobile</h4>
+        <input type="text" id="mobile" size="15" />
+        <input type="button" value="Search" data-bind="click: $root.findmobile" />
+        
+    </div>
+</div></section>
+
+        <div>
+        <ul id="update-emps" data-bind="foreach: emps">
+            <li>
+                <div>
+                    <div class="item">Employee ID <span data-bind="text: $data.emp_Id"></span></div>
+
+                </div>
+                <div>
+                    <div class="item">Employee Name</div>
+                    <input type="text" data-bind="value: $data.emp_name" />
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Phone</div>
+                    <input type="text" data-bind="value: $data.phone" />
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Mobile</div>
+                    <input type="text" data-bind="value: $data.mobile" />
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Department</div>
+                    <select data-bind="options:$root.deps, optionsText: 'dep_name',  optionsValue: 'dep_Id', value: $data.dep_Id"></select>
+
+
+                </div>
+                <div>
+                    <div class="item">Employee Rank</div>
+                    <select data-bind="options:$root.ranks, optionsText: 'rank_name',  optionsValue: 'rank_Id', value: $data.rank_Id"></select>
+
+
+                </div>
+
+                <div>
+                    <input type="button" value="Update" data-bind="click: $root.update" />
+                    <input type="button" value="Delete Item" data-bind="click: $root.remove" />
+                </div>
+            </li>
+        </ul>
+    </div>
+
+        </body>
+        </html>

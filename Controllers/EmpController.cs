@@ -18,6 +18,9 @@ namespace PhoneAPI.Controllers.api
             : base(repo)
         {
         }
+        // GET: api/Emp
+        // Return all employees as json i.e. [{"$id": "1" , "emp_Id": 1, "emp_name":"Mohammad","dep_Id" : 1 , "rank_Id": 2,"phone":"0118747430","mobile":"0555331717"},{"$id": "1" , "emp_Id": 3, "emp_name":"Saad","dep_Id" : 4, "rank_Id": 5,"phone":"0118747474","mobile":"0555334040"}]
+       
         public List<EmpModel> Get()
         {
             if (TheEmpRepository.GetAll() != null) { 
@@ -36,6 +39,10 @@ namespace PhoneAPI.Controllers.api
                 return null;
             }
         }
+
+        // GET: api/Emp?phone=0118747430
+        // return the list of employees that have the phone number in the variable phone i.e 
+        // [{"emp_Id": 3, "emp_name":"Mohammad","dep_Id" : 1 , "rank_Id": 2,"phone":"0118747430","mobile":"0555331717"}]
         [HttpGet]
         public IQueryable<EmpModel> SearchByPhone(string phone)
         {
@@ -61,6 +68,10 @@ namespace PhoneAPI.Controllers.api
             }
           
         }
+        // GET: api/Emp?mobile=0555331717
+        // return the list of employees that have the mobile number in the variable mobile i.e 
+        // [{"emp_Id": 3, "emp_name":"Mohammad","dep_Id" : 1 , "rank_Id": 2,"phone":"0118747430","mobile":"0555331717"}]
+       
         [HttpGet]
         public IQueryable<EmpModel> SearchByMobile(string mobile)
         {
@@ -86,7 +97,9 @@ namespace PhoneAPI.Controllers.api
             }
          
         }
-
+        // GET: api/Emp?name=Mohammad
+        // return the list of employees that have the in their names the word in the variable name i.e 
+        // [{"emp_Id": 3, "emp_name":"Mohammad","dep_Id" : 1 , "rank_Id": 2,"phone":"0118747430","mobile":"0555331717"}]
         [HttpGet]
         public IQueryable<EmpModel> SearchByName(string name)
         {
@@ -112,15 +125,18 @@ namespace PhoneAPI.Controllers.api
             }
          
         }
-       
+
+        // GET: api/Emp/3
+        // Return one employee according to the id as json i.e. [{"emp_Id": 3, "emp_name":"Mohammad","dep_Id" : 1 , "rank_Id": 2,"phone":"0118747430","mobile":"0555331717"}]
+      
         public HttpResponseMessage GetEmp(int id)
         {
             try
             {
-                var dep = TheEmpRepository.Get(id);
-                if (dep != null)
+                var emp = TheEmpRepository.Get(id);
+                if (emp != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, TheEmpModelFactory.Create(dep));
+                    return Request.CreateResponse(HttpStatusCode.OK, TheEmpModelFactory.Create(emp));
                 }
                 else
                 {
@@ -133,6 +149,8 @@ namespace PhoneAPI.Controllers.api
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
+        //POST: api/Emp
+        // Insert new employee to the repository
         [HttpPost]
         [CheckModelForNull]
         [ValidateModelState]
@@ -143,7 +161,7 @@ namespace PhoneAPI.Controllers.api
 
                 var entity = TheEmpModelFactory.Parse(empModel);
 
-                if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read subject/tutor from body");
+                if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read employee from body");
 
                 TheEmpRepository.Post(entity);
 
@@ -157,6 +175,8 @@ namespace PhoneAPI.Controllers.api
             }
         }
 
+        // PUT: api/Emp/5
+        // Update the employee in the repository
         [HttpPatch]
         [HttpPut]
         [CheckModelForNull]
@@ -168,13 +188,13 @@ namespace PhoneAPI.Controllers.api
 
                 var updatedEmp = TheEmpModelFactory.Parse(depModel);
 
-                if (updatedEmp == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read subject/tutor from body");
+                if (updatedEmp == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read employee from body");
 
                 var originalEmp = TheEmpRepository.Get(id);
 
                 if (originalEmp == null || originalEmp.emp_Id != id)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotModified, "Course is not found");
+                    return Request.CreateResponse(HttpStatusCode.NotModified, "Employee is not found");
                 }
                 else
                 {
@@ -194,6 +214,8 @@ namespace PhoneAPI.Controllers.api
             }
         }
 
+        // DELETE: api/Emp/5
+        // Delete employee from the repository
         public HttpResponseMessage Delete(int id)
         {
             try

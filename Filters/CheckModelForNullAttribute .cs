@@ -8,6 +8,8 @@ using System.Web.Http.Filters;
 using System.Net.Http;
 namespace PhoneAPI.Filters
 {
+
+    // Checks if the model has null attribute
     [AttributeUsage(AttributeTargets.Method, Inherited = true)]
     public class CheckModelForNullAttribute : ActionFilterAttribute
     {

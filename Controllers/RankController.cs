@@ -18,19 +18,25 @@ namespace PhoneAPI.Controllers.api
             : base(repo)
         {
         }
+        // GET: api/Rank
+        // Return all ranks as json i.e. [{"$id": "1" , "rank_Id" : 1 , "rank_name": "Private"},{"$id":"2", "rank_Id": 5, "rank_name": "Captin"}]
+      
         public IEnumerable<Rank> Get()
         {
             return TheRankRepository.GetAll();
         }
-        
+
+        // GET: api/Rank/3
+        // Return one rank according to the id as json i.e. [{"rank_Id" : 3 , "rank_name": "Major"}]
+       
         public HttpResponseMessage GetRank(int id)
         {
             try
             {
-                var dep = TheRankRepository.Get(id);
-                if (dep != null)
+                var rank = TheRankRepository.Get(id);
+                if (rank != null)
                 {
-                    return Request.CreateResponse(HttpStatusCode.OK, TheRankModelFactory.Create(dep));
+                    return Request.CreateResponse(HttpStatusCode.OK, TheRankModelFactory.Create(rank));
                 }
                 else
                 {
@@ -43,17 +49,19 @@ namespace PhoneAPI.Controllers.api
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
+        //POST: api/Rank
+        // Insert new rank to the repository
         [HttpPost]
         [CheckModelForNull]
         [ValidateModelState]
-        public HttpResponseMessage Post([FromBody] RankModel depModel)
+        public HttpResponseMessage Post([FromBody] RankModel rankModel)
         {
             try
             {
 
-                var entity = TheRankModelFactory.Parse(depModel);
+                var entity = TheRankModelFactory.Parse(rankModel);
 
-                if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read subject/tutor from body");
+                if (entity == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read rank from body");
 
                 TheRankRepository.Post(entity);
 
@@ -66,25 +74,26 @@ namespace PhoneAPI.Controllers.api
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
-
+        // PUT: api/Rank/5
+        // Update the rank in the repository
         [HttpPatch]
         [HttpPut]
         [CheckModelForNull]
         [ValidateModelState]
-        public HttpResponseMessage Put(int id, [FromBody] RankModel depModel)
+        public HttpResponseMessage Put(int id, [FromBody] RankModel rankModel)
         {
             try
             {
 
-                var updatedRank = TheRankModelFactory.Parse(depModel);
+                var updatedRank = TheRankModelFactory.Parse(rankModel);
 
-                if (updatedRank == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read subject/tutor from body");
+                if (updatedRank == null) Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Could not read rank from body");
 
                 var originalRank = TheRankRepository.Get(id);
 
                 if (originalRank == null || originalRank.rank_Id != id)
                 {
-                    return Request.CreateResponse(HttpStatusCode.NotModified, "Course is not found");
+                    return Request.CreateResponse(HttpStatusCode.NotModified, "Rank is not found");
                 }
                 else
                 {
@@ -104,13 +113,15 @@ namespace PhoneAPI.Controllers.api
             }
         }
 
+        // DELETE: api/Rank/5
+        // Delete rank from the repository
         public HttpResponseMessage Delete(int id)
         {
             try
             {
-                var course = TheRankRepository.Get(id);
+                var rank = TheRankRepository.Get(id);
 
-                if (course == null)
+                if (rank == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound);
                 }

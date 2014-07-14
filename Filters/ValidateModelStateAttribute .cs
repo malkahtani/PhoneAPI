@@ -9,6 +9,7 @@ using System.Web.Http.Filters;
 
 namespace PhoneAPI.Filters
 {
+    // Check that the model is valid 
     public class ValidateModelStateAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(HttpActionContext actionContext)

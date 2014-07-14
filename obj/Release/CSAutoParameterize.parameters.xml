@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=(LocalDb)\v11.0;Initial Catalog=aspnet-PhoneAPI-20140626000248;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\aspnet-PhoneAPI-20140626000248.mdf" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Mohammad\\Documents\\Project\\PhoneAPI\\PhoneAPI\\PhoneAPI\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="PhoneDBConnectionString-Web.config Connection String" description="PhoneDBConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=RY-HQR-010-0083\ISE_MSDN;Initial Catalog=phone;Integrated Security=true" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Mohammad\\Documents\\Project\\PhoneAPI\\PhoneAPI\\PhoneAPI\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='PhoneDBConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="PhoneDBConnectionString_DatabasePublish-Web.config Connection String" description="PhoneDBConnectionString_DatabasePublish Connection String used in web.config by the application to access the database." defaultValue="PhoneDBConnectionString_DatabasePublish.ConnetionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Mohammad\\Documents\\Project\\PhoneAPI\\PhoneAPI\\PhoneAPI\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='PhoneDBConnectionString_DatabasePublish']/@connectionString" />
+  </parameter>
+</parameters>

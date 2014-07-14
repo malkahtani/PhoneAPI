@@ -11,6 +11,7 @@ using System.Web.Http.Routing;
 
 namespace PhoneAPI.Filters
 {
+    // Return the link of the rank and store it in the self variable in the model.
     public class RankSelfLinkFilter : ActionFilterAttribute
     {
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)

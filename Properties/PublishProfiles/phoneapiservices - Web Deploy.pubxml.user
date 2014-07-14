@@ -6,6 +6,8 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAGeqV84pEkUuTd2AD2QozgwAAAAACAAAAAAADZgAAwAAAABAAAABefCbFQeuvCCzu//ZAx7uCAAAAAASAAACgAAAAEAAAAHihQ13eeEqtFbFmMknpt5YYAAAAKn8kQPGLbpZdNoz66Z3H4LBBtIPTZoOyFAAAAK4t2phf57pyzm8Gt5bxDjM47dQE</EncryptedPassword>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAsZ35Rbci/0GdAfODPDUcKgAAAAACAAAAAAAQZgAAAAEAACAAAADA+2dI0A5eNtU+nbuSSgLSMqfJcAFqqxfQ0X0IQSWI7AAAAAAOgAAAAAIAACAAAAAdpskqIw7lGdTUC6WCw30gC5fhMV5o2OJn3ieMNzneHSAAAAC5MO7GDfMoU2rCRR9JrD5r21El1sE9sLLSdHftT7QpXUAAAABPZ47rM6ESeLykWeSnRcQoz3y9+I++QqjyLAZqarrYPZt3LkQ006Hge9MYh+jgibWtLUV5IHHTigKk5333L9Sy</EncryptedPassword>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
   </PropertyGroup>
 </Project>
